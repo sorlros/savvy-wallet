@@ -16,7 +16,7 @@ const textFont = Poppins({
 
 const EntrancePage = () => {
   return (
-    <div className="flex bg-slate-100 flex-col items-center justify-center">
+    <div className="flex bg-slate-100 flex-col items-center justify-center pt-40 pb-20">
       <div
         className={cn(
           "flex flex-col items-center justify-center",

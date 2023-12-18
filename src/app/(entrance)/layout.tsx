@@ -17,18 +17,13 @@ export const metadata: Metadata = {
 };
 
 const EntranceLayout = async ({ children }: PropsWithChildren) => {
-  const { userId } = await auth()
-  console.log(userId)
+  const { userId } = await auth();
 
   return (
-    <div className="h-full bg-slate-100">
-      {userId !== null ? (
-        <Navbar />
-      ) : (
-        <Header />
-      )}
-      
-      <main className="pt-40 pb-20 bg-slate-100">{children}</main>
+    <div className="h-[100vh] bg-slate-100">
+      {userId !== null ? <Navbar /> : <Header />}
+
+      <main>{children}</main>
       <Footer />
     </div>
   );
