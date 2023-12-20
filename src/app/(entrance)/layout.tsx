@@ -20,10 +20,10 @@ const EntranceLayout = async ({ children }: PropsWithChildren) => {
   const { userId } = await auth();
 
   return (
-    <div className="h-[100vh] bg-slate-100">
+    <div className="flex w-full h-[100vh] bg-slate-100 overflow-y-hidden">
       {userId !== null ? <Navbar /> : <Header />}
 
-      <main>{children}</main>
+      <main className="flex w-full h-full">{children}</main>
       <Footer />
     </div>
   );

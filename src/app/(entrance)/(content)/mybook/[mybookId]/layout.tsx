@@ -3,7 +3,7 @@ import { PropsWithChildren } from "react";
 
 const MybookLayout = ({ children }: PropsWithChildren) => {
   return (
-    <div className="w-full h-[100vh] overflow-y-hidden">
+    <div className="flex w-full h-[100vh]">
       <Sidebar />
       {children}
     </div>
