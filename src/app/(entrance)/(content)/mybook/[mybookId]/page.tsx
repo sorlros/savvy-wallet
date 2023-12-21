@@ -10,10 +10,11 @@ interface MyBookPageProps {
 
 const MybookPage = ({ params }: MyBookPageProps) => {
   return (
-    <div className="flex w-full h-full">
-      <div className="flex w-full items-center justify-center">
+    <div className="flex justify-between w-full h-full items-center">
+      <div className="flex w-[50%] ml-7">
         <MyCalendar />
       </div>
+      <div className="flex w-[40%] h-[60vh] bg-black mr-7">asd</div>
     </div>
   );
 };

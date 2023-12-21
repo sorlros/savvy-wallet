@@ -58,7 +58,7 @@ body,
 /* Calendar */
 
 .react-calendar {
-  width: 70vw;
+  width: 400px;
   height: 60vh;
   max-width: 100%;
   min-width: 700px;
