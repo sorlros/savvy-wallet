@@ -3,7 +3,7 @@ import { Header } from "@/app/(entrance)/(_component)/header";
 import { auth } from "@clerk/nextjs";
 import { Metadata } from "next";
 import { PropsWithChildren } from "react";
-import { Navbar } from "./(content)/mybook/[mybookId]/_component/navbar";
+import { Navbar } from "./(content)/mybook/[userId]/_component/navbar";
 
 export const metadata: Metadata = {
   title: "Account book",

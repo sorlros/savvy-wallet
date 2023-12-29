@@ -2,13 +2,7 @@
 
 import MyCalendar from "./_component/calendar";
 
-interface MyBookPageProps {
-  params: {
-    mybookId: string;
-  };
-}
-
-const MybookPage = ({ params }: MyBookPageProps) => {
+const MyPage = () => {
   return (
     <div className="flex justify-between w-full h-full items-center">
       <div className="flex w-[50%] ml-7">
@@ -19,4 +13,4 @@ const MybookPage = ({ params }: MyBookPageProps) => {
   );
 };
 
-export default MybookPage;
+export default MyPage;

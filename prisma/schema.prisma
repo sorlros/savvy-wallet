@@ -20,7 +20,7 @@
   model Calendar {
     id String @id @default(auto()) @map("_id") @db.ObjectId
     userId String @db.ObjectId 
-    date DateTime
+    date String
 
     expense Expense[]
   }
@@ -28,7 +28,7 @@
   model Expense {
     id String @id @default(auto()) @map("_id") @db.ObjectId
     userId String @db.ObjectId
-    transfortation Int?
+    transportation Int?
     communication Int?
     food Int?
     shopping Int?

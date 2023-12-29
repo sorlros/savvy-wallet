@@ -1,14 +1,16 @@
 import { create } from "zustand";
 
 interface CalendarDetailModalStore {
+  date: string;
   isOpen?: boolean;
-  onOpen: () => void;
+  onOpen: (date: string) => void;
   onClose: () => void;
 }
 
 const useCalendarDetailModal = create<CalendarDetailModalStore>((set) => ({
-  isOpen: true,
-  onOpen: () => set({ isOpen: true }),
+  date: "",
+  isOpen: false,
+  onOpen: (date: string) => set({ isOpen: true, date }),
   onClose: () => set({ isOpen: false }),
 }));
 

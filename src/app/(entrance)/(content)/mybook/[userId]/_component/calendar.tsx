@@ -1,7 +1,9 @@
 "use client";
 
+import useCalendarDetailModal from "@/hooks/use-calendar-detail-modal";
+import { format } from "date-fns";
 import dynamic from "next/dynamic";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 // import "react-calendar/dist/Calendar.css";
 // import styles from "./calendar.module.css";
 
@@ -10,12 +12,21 @@ const Calendar = dynamic(() => import("react-calendar"), {
 });
 
 const MyCalendar = () => {
+  const calendarModal = useCalendarDetailModal();
+
   const [date, setDate] = useState(new Date());
 
   const handleDateChange = (newDate: any) => {
-    console.log("Selected date:", newDate);
     setDate(newDate);
   };
+
+  useEffect(() => {
+    if (date) {
+      format(date, "yyyyMMdd");
+      const dateToString = date.toISOString();
+      calendarModal.onOpen(dateToString);
+    }
+  }, [date]);
 
   return (
     <div>
