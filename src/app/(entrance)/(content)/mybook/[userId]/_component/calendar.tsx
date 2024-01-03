@@ -15,18 +15,20 @@ const MyCalendar = () => {
   const calendarModal = useCalendarDetailModal();
 
   const [date, setDate] = useState(new Date());
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleDateChange = (newDate: any) => {
+    setIsLoading(true);
     setDate(newDate);
   };
 
   useEffect(() => {
-    if (date) {
-      format(date, "yyyyMMdd");
-      const dateToString = date.toISOString();
+    if (isLoading) {
+      const dateToString = format(date, "yyyyMMdd");
       calendarModal.onOpen(dateToString);
+      setIsLoading(false);
     }
-  }, [date]);
+  }, [isLoading, date]);
 
   return (
     <div>

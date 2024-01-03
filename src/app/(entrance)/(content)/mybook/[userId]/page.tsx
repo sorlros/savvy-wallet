@@ -8,7 +8,7 @@ const MyPage = () => {
       <div className="flex w-[50%] ml-7">
         <MyCalendar />
       </div>
-      <div className="flex w-[40%] h-[60vh] bg-black mr-7">asd</div>
+      <div className="flex w-[40%] h-[60vh] bg-white mr-7 shadow-lg rounded-md"></div>
     </div>
   );
 };

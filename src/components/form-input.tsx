@@ -5,6 +5,8 @@ import { forwardRef } from "react";
 interface FormInputProps {
   id: string;
   label?: string;
+  type?: string;
+  name: string;
   placeholder?: string;
   defaultValue?: number;
   className?: string;

@@ -12,9 +12,9 @@
 
   model User {
     id String @id @default(auto()) @map("_id") @db.ObjectId
-    userId String @unique
 
     expense Expense[]
+    calendar Calendar[]
   }
 
   model Calendar {
@@ -23,6 +23,8 @@
     date String
 
     expense Expense[]
+
+    user User @relation(fields: [userId], references: [id])
   }
 
   model Expense {
