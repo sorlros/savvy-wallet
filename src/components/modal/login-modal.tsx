@@ -1,15 +1,14 @@
 import { useCallback, useState } from "react";
-
+import Heading from "../heading";
+import Input from "../input/input";
 import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { signIn } from "next-auth/react";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 import useLoginModal from "@/hooks/use-login-modal";
 import useRegisterModal from "@/hooks/use-register-modal";
-import Heading from "@/components/heading";
-import Input from "@/components/input/input";
 
-const RegisterModal = () => {
+const LoginModal = () => {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
   const loginModal = useLoginModal();
@@ -77,4 +76,4 @@ const RegisterModal = () => {
   );
 };
 
-export default RegisterModal;
+export default LoginModal;
