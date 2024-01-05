@@ -15,6 +15,8 @@ import useRegisterModal from "@/hooks/use-register-modal";
 import Heading from "@/components/heading";
 import Input from "@/components/input/input";
 import Button from "@/components/button";
+import axios from "axios";
+import prisma from "@/libs/prismadb";
 
 const RegisterModal = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -33,8 +35,29 @@ const RegisterModal = () => {
     },
   });
 
-  const onSubmit: SubmitHandler<FieldValues> = (data) => {
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
+    console.log("data", data);
     setIsLoading(true);
+
+    const user = await prisma.user.findUnique({
+      where: {
+        email: data.email,
+      },
+    });
+
+    if (!user || !user?.hashedPassword) {
+      axios
+        .post("/api/register", data)
+        .then(() => {
+          toast.success("계정이 생성되었습니다.");
+        })
+        .catch((error) => {
+          toast.error("계정 생성에 실패했습니다.");
+        })
+        .finally(() => {
+          setIsLoading(false);
+        });
+    }
 
     signIn("credentials", {
       ...data,

@@ -1,8 +1,8 @@
 import { auth } from "@clerk/nextjs";
 import { InputType, ReturnType } from "./types";
-import { db } from "@/lib/db";
+import { db } from "@/libs/db";
 import { revalidatePath } from "next/cache";
-import { createSafeAction } from "@/lib/create-safe-action";
+import { createSafeAction } from "@/libs/create-safe-action";
 import { CreateDayExpense } from "./schema";
 
 const handler = async (data: InputType): Promise<ReturnType> => {

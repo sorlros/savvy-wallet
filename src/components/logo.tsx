@@ -1,4 +1,4 @@
-import { cn } from "@/lib/utils";
+import { cn } from "@/libs/utils";
 import localFont from "next/font/local";
 import Image from "next/image";
 import Link from "next/link";
