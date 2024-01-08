@@ -4,6 +4,7 @@ import type { Metadata } from "next";
 
 import { ModalProvider } from "@/provider/modal-provider";
 import { QueryProvider } from "@/provider/query-provider";
+import ClientOnly from "@/components/client-only";
 
 const inter = Inter({ subsets: ["latin"] });
 

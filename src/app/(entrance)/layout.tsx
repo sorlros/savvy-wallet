@@ -17,9 +17,12 @@ export const metadata: Metadata = {
 };
 
 const EntranceLayout = async ({ children }: PropsWithChildren) => {
+  // const currentUser = getCurrentUser();
+  // console.log(currentUser);
+
   return (
     <div className="flex w-full h-[100vh] bg-slate-100 overflow-y-hidden">
-      {/* {userId !== null ? <Navbar /> : <Header />} */}
+      {/* {currentUser !== null ? <Navbar /> : <Header />} */}
 
       <main className="flex w-full h-full">{children}</main>
       <Footer />

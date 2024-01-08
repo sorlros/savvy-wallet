@@ -5,8 +5,12 @@ import GithubProvider from "next-auth/providers/github";
 import GoogleProvider from "next-auth/providers/google";
 import { PrismaAdapter } from "@next-auth/prisma-adapter";
 import prisma from "../../../libs/prismadb";
+import { revalidatePath } from "next/cache";
 
-export const authOptions: AuthOptions = {
+export const {
+  auth,
+  handlers: { GET, POST },
+} = NextAuth({
   adapter: PrismaAdapter(prisma),
   providers: [
     GithubProvider({
@@ -47,6 +51,7 @@ export const authOptions: AuthOptions = {
           throw new Error("Invalid credentials");
         }
 
+        revalidatePath(`/mybook/${user.id}`);
         return user;
       },
     }),
@@ -59,6 +64,6 @@ export const authOptions: AuthOptions = {
     strategy: "jwt",
   },
   secret: process.env.NEXTAUTH_SECRET,
-};
+});
 
-export default NextAuth(authOptions);
+export default auth;

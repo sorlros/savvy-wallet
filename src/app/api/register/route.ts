@@ -1,14 +1,26 @@
 import bcrypt from "bcrypt";
 import prisma from "../../../libs/prismadb";
 import { NextResponse } from "next/server";
+import { toast } from "sonner";
+import { revalidatePath } from "next/cache";
+import { useRouter } from "next/navigation";
 
 export async function POST(request: Request) {
-  if (request.method === "POST") {
-    const body = await request.json();
-    const { email, password } = body;
+  const body = await request.json();
+  console.log(body);
+  const { email, password } = body;
 
-    const hashedPassword = await bcrypt.hash(password, 12);
+  const hashedPassword = await bcrypt.hash(password, 12);
 
+  const existUser = await prisma.user.findUnique({
+    where: {
+      email: body.email,
+    },
+  });
+
+  if (existUser) {
+    return NextResponse.json({ error: "해당 이메일은 이미 존재합니다." });
+  } else {
     const user = await prisma.user.create({
       data: {
         email,
@@ -16,10 +28,8 @@ export async function POST(request: Request) {
       },
     });
 
+    revalidatePath(`/mybook/${user.id}`);
+
     return NextResponse.json(user);
-  } else {
-    return {
-      error: "잘못된 접근 방식입니다.",
-    };
   }
 }

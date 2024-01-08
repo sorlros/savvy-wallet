@@ -39,48 +39,40 @@ const RegisterModal = () => {
     console.log("data", data);
     setIsLoading(true);
 
-    const user = await prisma.user.findUnique({
-      where: {
-        email: data.email,
-      },
-    });
+    axios
+      .post("/api/register", data, { method: "POST" })
+      .then(() => {
+        toast.success("계정이 생성되었습니다.");
+      })
+      .catch((error) => {
+        toast.error("계정 생성에 실패했습니다.");
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
 
-    if (!user || !user?.hashedPassword) {
-      axios
-        .post("/api/register", data)
-        .then(() => {
-          toast.success("계정이 생성되었습니다.");
-        })
-        .catch((error) => {
-          toast.error("계정 생성에 실패했습니다.");
-        })
-        .finally(() => {
-          setIsLoading(false);
-        });
-    }
+    // signIn("credentials", {
+    //   ...data,
+    //   redirect: false,
+    // }).then((callback) => {
+    //   setIsLoading(false);
 
-    signIn("credentials", {
-      ...data,
-      redirect: false,
-    }).then((callback) => {
-      setIsLoading(false);
+    //   if (callback?.ok) {
+    //     toast.success("로그인 완료");
+    //     router.refresh();
+    //     loginModal.onClose();
+    //   }
 
-      if (callback?.ok) {
-        toast.success("로그인 완료");
-        router.refresh();
-        loginModal.onClose();
-      }
-
-      if (callback?.error) {
-        toast.error(callback.error);
-      }
-    });
+    //   if (callback?.error) {
+    //     toast.error(callback.error);
+    //   }
+    // });
   };
 
-  const toggle = useCallback(() => {
-    loginModal.onClose();
-    registerModal.onOpen();
-  }, [loginModal, registerModal]);
+  // const toggle = useCallback(() => {
+  //   loginModal.onClose();
+  //   registerModal.onOpen();
+  // }, [loginModal, registerModal]);
 
   return (
     <div className="flex flex-col gap-4">
@@ -124,7 +116,7 @@ const RegisterModal = () => {
           <div>이미 계정이 있으신가요?</div>
           <div
             className="text-neutral-800 cursor-pointer hover:underline"
-            onClick={toggle}
+            onClick={() => {}}
           >
             Log in
           </div>

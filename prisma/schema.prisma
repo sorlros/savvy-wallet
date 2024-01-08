@@ -11,36 +11,36 @@
   }
 
   model User {
-    id String @id @default(auto()) @map("_id") @db.ObjectId
-    name String?
-    email String? @unique
-    emailVerified DateTime?
-    hashedPassword String?
+  id              String      @id @default(auto()) @map("_id") @db.ObjectId
+  name            String?
+  email           String?     @unique
+  emailVerified   DateTime?
+  hashedPassword  String?
 
-    expense Expense[]
-    calendar Calendar[]
-  }
+  expenses         Expense[]
+  calendars        Calendar[]
+}
 
-  model Calendar {
-    id String @id @default(auto()) @map("_id") @db.ObjectId
-    userId String @db.ObjectId 
-    date String
+model Calendar {
+  id          String      @id @default(auto()) @map("_id") @db.ObjectId
+  userId      String      @db.ObjectId
+  date        String
 
-    expense Expense[]
+  expenses    Expense[]
 
-    user User @relation(fields: [userId], references: [id])
-  }
+  user        User        @relation(fields: [userId], references: [id])
+}
 
-  model Expense {
-    id String @id @default(auto()) @map("_id") @db.ObjectId
-    userId String @db.ObjectId
-    transportation Int?
-    communication Int?
-    food Int?
-    shopping Int?
-    tax Int?
-    accommodation Int?
-    
-    calendar Calendar @relation(fields: [userId], references: [id])
-    user User @relation(fields: [userId], references: [id])
-  }
+model Expense {
+  id              String      @id @default(auto()) @map("_id") @db.ObjectId
+  userId          String      @db.ObjectId
+  transportation  Int?
+  communication   Int?
+  food            Int?
+  shopping        Int?
+  tax             Int?
+  accommodation   Int?
+
+  calendar        Calendar    @relation(fields: [userId], references: [id])
+  user            User        @relation(fields: [userId], references: [id])
+}

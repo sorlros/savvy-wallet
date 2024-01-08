@@ -1,14 +1,14 @@
-import { auth } from "@clerk/nextjs";
 import { InputType, ReturnType } from "./types";
 import { db } from "@/libs/db";
 import { revalidatePath } from "next/cache";
 import { createSafeAction } from "@/libs/create-safe-action";
 import { CreateDayExpense } from "./schema";
+import getCurrentUser from "../get-current-user";
 
 const handler = async (data: InputType): Promise<ReturnType> => {
-  const { userId } = auth();
+  const { ...currentUser } = getCurrentUser();
 
-  if (!userId) {
+  if (!currentUser) {
     return {
       error: "유저정보가 일치하지 않습니다.",
     };
@@ -31,9 +31,8 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     calendar = await db.calendar.create({
       data: {
         id,
-        userId,
         date,
-        expense: {
+        expenses: {
           create: {
             transportation,
             communication,
@@ -41,6 +40,11 @@ const handler = async (data: InputType): Promise<ReturnType> => {
             shopping,
             tax,
             accommodation,
+          },
+        },
+        user: {
+          create: {
+            id,
           },
         },
       },
@@ -51,7 +55,7 @@ const handler = async (data: InputType): Promise<ReturnType> => {
     };
   }
 
-  revalidatePath(`/mybook/${userId}`);
+  revalidatePath(`/mybook/${id}`);
   return { data: calendar };
 };
 
