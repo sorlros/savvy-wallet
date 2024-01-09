@@ -16,7 +16,7 @@ const textFont = Poppins({
 
 const EntrancePage = () => {
   return (
-    <div className="flex bg-slate-100 flex-col items-center justify-center pt-40 pb-20">
+    <div className="flex w-full h-full bg-slate-100 flex-col items-center justify-center pt-10 pb-20">
       <div
         className={cn(
           "flex flex-col items-center justify-center",
@@ -57,7 +57,7 @@ const EntrancePage = () => {
       </div>
 
       <Button asChild className="mt-6" size="lg">
-        <Link href="/sign-up">지금 바로 사용하기</Link>
+        <Link href="/auth/login">지금 바로 사용하기</Link>
       </Button>
     </div>
   );

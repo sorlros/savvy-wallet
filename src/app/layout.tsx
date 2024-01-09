@@ -15,10 +15,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="ko">
-      <QueryProvider>
-        <ModalProvider />
-        <body className={inter.className}>{children}</body>
-      </QueryProvider>
+      <ModalProvider />
+      <body className={inter.className}>{children}</body>
     </html>
   );
 }
