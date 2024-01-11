@@ -19,14 +19,17 @@ import { FcGoogle } from "react-icons/fc";
 import { FaGithub } from "react-icons/fa";
 import { FormError } from "../form-error";
 import { FormSuccess } from "../form-success";
-import { login } from "@/actions/login";
+import { register } from "@/actions/register";
 import { useState, useTransition } from "react";
 import { CardWrapper } from "./card-wrapper";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
 
 export const RegisterForm = () => {
   const [isPending, startTransition] = useTransition();
   const [error, setError] = useState<string | undefined>("");
   const [success, setSuccess] = useState<string | undefined>("");
+  const router = useRouter();
 
   const form = useForm<z.infer<typeof RegisterSchema>>({
     resolver: zodResolver(RegisterSchema),
@@ -42,9 +45,15 @@ export const RegisterForm = () => {
     setSuccess("");
 
     startTransition(() => {
-      login(values).then((data) => {
-        setError(data.error);
-        setSuccess(data.success);
+      register(values).then((data) => {
+        try {
+          setSuccess(data.success);
+          toast.success("계정이 생성되었습니다.");
+          router.push(`/mybook/${data.user?.id}`);
+        } catch (error) {
+          setError(data.error);
+          toast.error("계정 등록에 실패했습니다.");
+        }
       });
     });
   };
@@ -119,26 +128,8 @@ export const RegisterForm = () => {
           <FormError message={error} />
           <FormSuccess message={success} />
 
-          <div className="flex items-center w-full gap-x-2">
-            <Button
-              size="lg"
-              className="w-full"
-              variant="outline"
-              onClick={() => {}}
-            >
-              <FcGoogle className="h-5 w-5" />
-            </Button>
-            <Button
-              size="lg"
-              className="w-full"
-              variant="outline"
-              onClick={() => {}}
-            >
-              <FaGithub />
-            </Button>
-          </div>
           <Button disabled={isPending} type="submit" className="w-full">
-            로그인
+            등록
           </Button>
         </form>
       </Form>

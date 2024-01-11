@@ -1,4 +1,4 @@
-import { z } from "zod";
+import { optional, z } from "zod";
 
 export const LoginSchema = z.object({
   email: z.string().email({
@@ -7,6 +7,7 @@ export const LoginSchema = z.object({
   password: z.string().min(1, {
     message: "올바른 비밀번호가 아닙니다.",
   }),
+  id: z.optional(z.string()),
 });
 
 export const RegisterSchema = z.object({

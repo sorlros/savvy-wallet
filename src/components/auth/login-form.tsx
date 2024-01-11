@@ -20,6 +20,7 @@ import { FormSuccess } from "../form-success";
 import { login } from "@/actions/login";
 import { useState, useTransition } from "react";
 import { CardWrapper } from "./card-wrapper";
+import { revalidatePath } from "next/cache";
 
 export const LoginForm = () => {
   const [isPending, startTransition] = useTransition();
@@ -40,8 +41,7 @@ export const LoginForm = () => {
 
     startTransition(() => {
       login(values).then((data) => {
-        setError(data.error);
-        setSuccess(data.success);
+        setError(data?.error);
       });
     });
   };

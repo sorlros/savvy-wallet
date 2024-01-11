@@ -8,6 +8,17 @@ import ClientOnly from "@/components/client-only";
 
 const inter = Inter({ subsets: ["latin"] });
 
+export const metadata: Metadata = {
+  title: "Account book",
+  description: "Account book web with Next.js",
+  icons: [
+    {
+      url: "../../../logo.svg",
+      href: "../../../logo.svg",
+    },
+  ],
+};
+
 export default function RootLayout({
   children,
 }: {
