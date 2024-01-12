@@ -2,10 +2,16 @@
 
 import { useTransition } from "react";
 import MyCalendar from "./_component/calendar";
+import { redirect, useParams } from "next/navigation";
 
 const MyPage = () => {
   const [isPending, startTransition] = useTransition();
+  const params = useParams();
+  console.log(params, "params");
 
+  if (!params.userId) {
+    return redirect("/auth/login");
+  }
   return (
     <div className="flex justify-between w-full h-full items-center">
       <div className="flex w-[50%] ml-7">

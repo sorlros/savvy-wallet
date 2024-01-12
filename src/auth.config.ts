@@ -21,7 +21,12 @@ export default {
             user.hashedPassword,
           );
 
-          if (passwordsMatch) return user;
+          if (passwordsMatch) {
+            return {
+              ...user,
+              id: user.id,
+            };
+          }
         }
 
         return null;

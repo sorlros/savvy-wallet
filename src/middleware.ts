@@ -16,9 +16,9 @@ export default auth((req) => {
   const isApiAuthRoute = nextUrl.pathname.startsWith(apiAuthPrefix);
   const isPublicRoute = publicRoutes.includes(nextUrl.pathname);
   const isAuthRoute = authRoutes.includes(nextUrl.pathname);
-
+  //Response.redirect(new URL(dynamicRedirectUrl, nextUrl));
   console.log("isLoggedIn", isLoggedIn);
-  console.log("userId", req.auth?.user?.id);
+  console.log("userId", req.auth?.user);
 
   if (isApiAuthRoute) {
     return null;
@@ -27,7 +27,7 @@ export default auth((req) => {
   if (isAuthRoute) {
     if (isLoggedIn) {
       const dynamicRedirectUrl = `/mybook/${req.auth?.user?.id}`;
-      return Response.redirect(new URL(dynamicRedirectUrl, nextUrl));
+      return;
     }
     return null;
   }

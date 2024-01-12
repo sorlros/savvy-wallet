@@ -41,7 +41,7 @@ const CalendarDetailModal = () => {
   };
 
   const handleSubmit = (formData: FormData) => {
-    const id = formData.get("id") as string;
+    const userId = formData.get("userId") as string;
     const date = formData.get("date") as string;
     const transportation = parseNumber(formData.get("transportation"));
     const communication = parseNumber(formData.get("communication"));
@@ -51,6 +51,7 @@ const CalendarDetailModal = () => {
     const shopping = parseNumber(formData.get("shopping"));
 
     console.log(
+      userId,
       date,
       transportation,
       communication,
@@ -72,7 +73,7 @@ const CalendarDetailModal = () => {
     }
 
     execute({
-      id,
+      userId,
       date,
       transportation,
       communication,

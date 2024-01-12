@@ -2,11 +2,8 @@
 
 import { RegisterSchema } from "@/schemas";
 import * as z from "zod";
-import bcrypt from 'bcrypt';
+import bcrypt from "bcrypt";
 import { db } from "@/libs/db";
-import { revalidatePath } from "next/cache";
-import { useRouter } from "next/router";
-
 
 export const register = async (values: z.infer<typeof RegisterSchema>) => {
   const validatedFields = RegisterSchema.safeParse(values);
@@ -17,37 +14,36 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
     };
   }
 
-  const { email, name, password} = validatedFields.data;
-  const hashedPassword = await bcrypt.hash(password, 10)
+  const { email, name, password } = validatedFields.data;
+  const hashedPassword = await bcrypt.hash(password, 10);
 
   const existingUser = await db.user.findUnique({
     where: {
       email,
-    }
-  })
+    },
+  });
 
   if (existingUser) {
     return {
-      error: "해당 이메일이 이미 존재합니다."
-    }
+      error: "해당 이메일이 이미 존재합니다.",
+    };
   }
 
-  await db.user.create({
+  const user = await db.user.create({
     data: {
-      name,
-      email,
-      hashedPassword
-    }
-  })
+      name: validatedFields.data.name,
+      email: validatedFields.data.email,
+      hashedPassword,
+    },
+  });
 
-  const user = await db.user.findUnique({
-    where: {
-      email
-    }
-  })
+  if (!user) {
+    return {
+      error: "생성오류",
+    };
+  }
 
   return {
     success: "계정이 생성되었습니다.",
-    user
   };
 };
