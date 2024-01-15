@@ -9,11 +9,21 @@ import { Button } from "../ui/button";
 import { useAction } from "@/hooks/use-action";
 import { createCalendar } from "@/actions/create-day-expense";
 import { toast } from "sonner";
+import { z } from "zod";
+import { ExpenseSchema } from "@/schemas";
+import { useTransition } from "react";
+import { createExpense } from "@/actions/create-expense";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
+import { Input } from "../ui/input";
+import Heading from "../heading";
 
 const CalendarDetailModal = () => {
   const modal = useCalendarDetailModal();
   const isOpen = useCalendarDetailModal((state) => state.isOpen);
   const date = useCalendarDetailModal((state) => state.date);
+  const [isPending, startTransition] = useTransition();
   const params = useParams();
   const router = useRouter();
   const id = params.userId;
@@ -22,14 +32,7 @@ const CalendarDetailModal = () => {
   const month = date.substring(4, 6);
   const day = date.substring(6, 8);
 
-  const { execute } = useAction(createCalendar, {
-    onSuccess: (data) => {
-      toast.success("해당 날짜 지출이 추가되었습니다.");
-    },
-    onError: (error) => {
-      toast.error(error);
-    },
-  });
+  console.log("date", date);
 
   const parseNumber = (value: FormDataEntryValue | null): number | null => {
     if (value === null) {
@@ -40,7 +43,7 @@ const CalendarDetailModal = () => {
     return isNaN(parsedValue) ? null : parsedValue;
   };
 
-  const handleSubmit = (formData: FormData) => {
+  const handleSubmit = async (formData: FormData) => {
     const userId = formData.get("userId") as string;
     const date = formData.get("date") as string;
     const transportation = parseNumber(formData.get("transportation"));
@@ -49,17 +52,6 @@ const CalendarDetailModal = () => {
     const tax = parseNumber(formData.get("tax"));
     const accommodation = parseNumber(formData.get("accommodation"));
     const shopping = parseNumber(formData.get("shopping"));
-
-    console.log(
-      userId,
-      date,
-      transportation,
-      communication,
-      food,
-      tax,
-      accommodation,
-      shopping,
-    );
 
     if (
       transportation === null ||
@@ -72,16 +64,18 @@ const CalendarDetailModal = () => {
       return;
     }
 
-    execute({
+    const data = {
       userId,
       date,
       transportation,
       communication,
       food,
-      shopping,
       tax,
       accommodation,
-    });
+      shopping,
+    };
+
+    await createExpense(data);
   };
 
   return (
@@ -91,6 +85,7 @@ const CalendarDetailModal = () => {
           <DialogHeader className="flex w-full justify-center items-center mt-3">
             {`${year}년 ${month}월 ${day}일`}
           </DialogHeader>
+
           <form action={handleSubmit}>
             <CalendarForm
               label="교통비"
@@ -119,12 +114,7 @@ const CalendarDetailModal = () => {
               type="number"
             />
 
-            <input
-              hidden
-              value={params.userId}
-              name="userId"
-              onChange={() => {}}
-            />
+            <input hidden value={id} name="userId" onChange={() => {}} />
             <input
               hidden
               value={date}

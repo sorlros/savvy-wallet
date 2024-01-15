@@ -21,3 +21,14 @@ export const RegisterSchema = z.object({
     message: "이름을 설정해야합니다.",
   }),
 });
+
+export const ExpenseSchema = z.object({
+  userId: z.string(),
+  date: z.string(),
+  transportation: z.number().int().min(0),
+  communication: z.number().int().min(0),
+  food: z.number().int().min(0),
+  shopping: z.number().int().min(0),
+  tax: z.number().int().min(0),
+  accommodation: z.number().int().min(0),
+});

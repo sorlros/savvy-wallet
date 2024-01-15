@@ -24,16 +24,16 @@
 model Calendar {
   id          String      @id @default(auto()) @map("_id") @db.ObjectId
   userId      String      @db.ObjectId
-  date        String
+  date        String      @unique
 
   expenses    Expense[]
-
   user        User        @relation(fields: [userId], references: [id])
 }
 
 model Expense {
   id              String      @id @default(auto()) @map("_id") @db.ObjectId
   userId          String      @db.ObjectId
+  date            String
   transportation  Int?
   communication   Int?
   food            Int?
@@ -41,6 +41,6 @@ model Expense {
   tax             Int?
   accommodation   Int?
 
-  calendar        Calendar    @relation(fields: [userId], references: [id])
+  calendar        Calendar    @relation(fields: [date], references: [date])
   user            User        @relation(fields: [userId], references: [id])
 }
