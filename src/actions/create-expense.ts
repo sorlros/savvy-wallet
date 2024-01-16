@@ -26,22 +26,55 @@ export const createExpense = async (values: z.infer<typeof ExpenseSchema>) => {
     accommodation,
   } = validatedFields.data;
 
-  let calendar;
+  let expense;
 
-  try {
-    calendar = await db.expense.create({
-      data: {
-        userId,
-        date,
-        transportation,
-        communication,
-        food,
-        shopping,
-        tax,
-        accommodation,
-      },
-    });
-  } catch (error) {
-    return { error: "오류발생" };
+  expense = await db.expense.findMany({
+    where: {
+      date: validatedFields.data.date,
+    },
+  });
+  console.log("expense", expense);
+
+  if (!expense || expense.length === 0) {
+    try {
+      expense = await db.expense.create({
+        data: {
+          userId,
+          date,
+          transportation,
+          communication,
+          food,
+          shopping,
+          tax,
+          accommodation,
+        },
+      });
+    } catch (error) {
+      return { error: "Expense 생성 오류" };
+    } finally {
+      console.log("Expense 생성 완료");
+    }
+  } else {
+    try {
+      expense = await db.expense.updateMany({
+        where: {
+          date,
+        },
+        data: {
+          transportation,
+          communication,
+          food,
+          shopping,
+          tax,
+          accommodation,
+        },
+      });
+    } catch (error) {
+      return {
+        error: "Expense 업데이트 오류",
+      };
+    } finally {
+      console.log("Expense 업데이트 완료");
+    }
   }
 };

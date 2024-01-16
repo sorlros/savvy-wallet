@@ -1,23 +1,74 @@
 "use client";
 
-import { useTransition } from "react";
+import { useEffect, useState, useTransition } from "react";
 import MyCalendar from "./_component/calendar";
 import { redirect, useParams } from "next/navigation";
+import { db } from "@/libs/db";
+import { ExpenseSchema } from "@/schemas";
 
 const MyPage = () => {
   const [isPending, startTransition] = useTransition();
   const params = useParams();
-  console.log(params, "params");
+  const [user, setUser] = useState([
+    {
+      userId: "",
+      date: "",
+      transportation: 0,
+      communication: 0,
+      food: 0,
+      shopping: 0,
+      tax: 0,
+      accommodation: 0,
+    },
+  ]);
 
-  if (!params.userId) {
-    return redirect("/auth/login");
-  }
+  useEffect(() => {
+    if (!params.userId) {
+      return redirect("/auth/login");
+    }
+
+    const fetchData = async () => {
+      let user;
+
+      try {
+        const user = await db.user
+          .findUnique({
+            where: {
+              id: params.userId as string,
+            },
+          })
+          .expenses();
+        if (user) {
+          setUser(user);
+        } else {
+          setUser([]);
+          return;
+        }
+      } catch (error) {
+        return { error: "asd" };
+      }
+    };
+  }, []);
+
   return (
     <div className="flex justify-between w-full h-full items-center">
       <div className="flex w-[50%] ml-7">
         <MyCalendar />
       </div>
-      <div className="flex w-[40%] h-[60vh] bg-white mr-7 shadow-lg rounded-md"></div>
+      <div className="flex w-[40%] h-[60vh] bg-white mr-7 shadow-lg rounded-md">
+        {user.map((data) => (
+          <div key={data.userId}>
+            <p>userId: {data.userId}</p>
+            <p>data: {data.date}</p>
+            <p>accommodation: {data.accommodation}</p>
+            <p>communication: {data.communication}</p>
+            <p>food: {data.food}</p>
+            <p>shopping: {data.shopping}</p>
+            <p>tax: {data.tax}</p>
+            <p>transportation: {data.transportation}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 };

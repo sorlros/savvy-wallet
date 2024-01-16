@@ -2,30 +2,16 @@
 
 import useCalendarDetailModal from "@/hooks/use-calendar-detail-modal";
 import { Dialog, DialogContent, DialogHeader } from "../ui/dialog";
-import { format } from "date-fns";
 import CalendarForm from "../calendar-form";
-import { useParams, useRouter } from "next/navigation";
+import { useParams } from "next/navigation";
 import { Button } from "../ui/button";
-import { useAction } from "@/hooks/use-action";
-import { createCalendar } from "@/actions/create-day-expense";
-import { toast } from "sonner";
-import { z } from "zod";
-import { ExpenseSchema } from "@/schemas";
-import { useTransition } from "react";
 import { createExpense } from "@/actions/create-expense";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
-import { Input } from "../ui/input";
-import Heading from "../heading";
 
 const CalendarDetailModal = () => {
   const modal = useCalendarDetailModal();
   const isOpen = useCalendarDetailModal((state) => state.isOpen);
   const date = useCalendarDetailModal((state) => state.date);
-  const [isPending, startTransition] = useTransition();
   const params = useParams();
-  const router = useRouter();
   const id = params.userId;
 
   const year = date.substring(0, 4);

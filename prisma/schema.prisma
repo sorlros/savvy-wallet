@@ -33,13 +33,13 @@ model Calendar {
 model Expense {
   id              String      @id @default(auto()) @map("_id") @db.ObjectId
   userId          String      @db.ObjectId
-  date            String
-  transportation  Int?
-  communication   Int?
-  food            Int?
-  shopping        Int?
-  tax             Int?
-  accommodation   Int?
+  date            String      @unique
+  transportation  Int
+  communication   Int
+  food            Int
+  shopping        Int
+  tax             Int
+  accommodation   Int
 
   calendar        Calendar    @relation(fields: [date], references: [date])
   user            User        @relation(fields: [userId], references: [id])
