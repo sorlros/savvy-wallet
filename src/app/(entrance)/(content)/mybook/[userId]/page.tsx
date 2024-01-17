@@ -6,7 +6,11 @@ import { redirect, useParams } from "next/navigation";
 import { db } from "@/libs/db";
 import { ExpenseSchema } from "@/schemas";
 
-const MyPage = () => {
+interface MyPageProps {
+  data: {};
+}
+
+const MyPage = ({ data }: MyPageProps) => {
   const [isPending, startTransition] = useTransition();
   const params = useParams();
   const [user, setUser] = useState([
@@ -27,27 +31,30 @@ const MyPage = () => {
       return redirect("/auth/login");
     }
 
-    const fetchData = async () => {
-      let user;
-
+    const fetchData = () => {
       try {
-        const user = await db.user
+        const user = db.user
           .findUnique({
             where: {
               id: params.userId as string,
             },
           })
-          .expenses();
-        if (user) {
-          setUser(user);
-        } else {
-          setUser([]);
-          return;
-        }
+          .expenses()
+          .then((userWithExpenses) => {
+            if (userWithExpenses) {
+              console.log("userWithExpenses", userWithExpenses);
+              setUser(userWithExpenses);
+            } else {
+              setUser([]);
+              return;
+            }
+          });
       } catch (error) {
-        return { error: "asd" };
+        return { error: "fetching 오류" };
       }
     };
+
+    fetchData();
   }, []);
 
   return (

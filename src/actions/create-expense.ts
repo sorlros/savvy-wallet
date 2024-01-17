@@ -27,12 +27,14 @@ export const createExpense = async (values: z.infer<typeof ExpenseSchema>) => {
   } = validatedFields.data;
 
   let expense;
+  let calendar;
 
   expense = await db.expense.findMany({
     where: {
       date: validatedFields.data.date,
     },
   });
+
   console.log("expense", expense);
 
   if (!expense || expense.length === 0) {
@@ -47,6 +49,13 @@ export const createExpense = async (values: z.infer<typeof ExpenseSchema>) => {
           shopping,
           tax,
           accommodation,
+        },
+      });
+
+      calendar = await db.calendar.create({
+        data: {
+          userId,
+          date,
         },
       });
     } catch (error) {

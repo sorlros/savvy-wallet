@@ -1,11 +1,12 @@
 "use client";
 
 import useCalendarDetailModal from "@/hooks/use-calendar-detail-modal";
+import useCalendarWithExpenseStore from "@/hooks/use-calendar-with-expense-store";
+import { db } from "@/libs/db";
 import { format } from "date-fns";
 import dynamic from "next/dynamic";
+import { useParams } from "next/navigation";
 import { useEffect, useState } from "react";
-// import "react-calendar/dist/Calendar.css";
-// import styles from "./calendar.module.css";
 
 const Calendar = dynamic(() => import("react-calendar"), {
   ssr: false,
@@ -13,13 +14,36 @@ const Calendar = dynamic(() => import("react-calendar"), {
 
 const MyCalendar = () => {
   const calendarModal = useCalendarDetailModal();
+  const params = useParams();
 
   const [date, setDate] = useState(new Date());
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleDateChange = (newDate: any) => {
+  const { data: storeData, setData: setStoreData } =
+    useCalendarWithExpenseStore();
+
+  const handleDateChange = async (newDate: any) => {
     setIsLoading(true);
     setDate(newDate);
+    const dateToString = format(date, "yyyyMMdd");
+
+    let calendar;
+
+    calendar = await db.calendar.findUnique({
+      where: {
+        id: params.userId as string,
+        date: dateToString,
+      },
+      include: {
+        expenses: true,
+      },
+    });
+
+    if (!calendar) {
+      return;
+    }
+
+    setData(calendar?.expenses);
   };
 
   useEffect(() => {
@@ -32,7 +56,7 @@ const MyCalendar = () => {
 
   return (
     <div>
-      <Calendar onChange={handleDateChange} value={date} />
+      <Calendar onChange={handleDateChange} value={date} data={storeData} />
     </div>
   );
 };
