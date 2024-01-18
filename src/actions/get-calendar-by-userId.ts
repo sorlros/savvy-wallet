@@ -1,24 +1,25 @@
 "use server";
 
 import { db } from "@/libs/db";
-import { Calendar, Expense } from "@/libs/types";
+import { Calendar } from "@/libs/types";
+import { Expense } from "@prisma/client";
 
 export const getCalendarByUserId = async (
   userId: string,
   date: string,
 ): Promise<Expense | null> => {
-  let data;
+  try {
+    const data = await db.expense.findUnique({
+      where: {
+        userId,
+        date,
+      },
+    });
 
-  data = await db.expense.findUnique({
-    where: {
-      userId,
-      date,
-    },
-  });
-
-  if (data && data !== null) {
-    return data;
+    return data || null;
+  } catch (error) {
+    console.error("DB값을 불러오지 못했습니다.");
   }
 
-  return data;
+  return null;
 };

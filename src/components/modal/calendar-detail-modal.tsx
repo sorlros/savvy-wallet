@@ -6,11 +6,15 @@ import CalendarForm from "../calendar-form";
 import { useParams } from "next/navigation";
 import { Button } from "../ui/button";
 import { createExpense } from "@/actions/create-expense";
+import useCalendarWithExpenseStore from "@/hooks/use-calendar-with-expense-store";
 
 const CalendarDetailModal = () => {
   const modal = useCalendarDetailModal();
   const isOpen = useCalendarDetailModal((state) => state.isOpen);
   const date = useCalendarDetailModal((state) => state.date);
+  const { data: storeData, setData: setStoreData } =
+    useCalendarWithExpenseStore();
+
   const params = useParams();
   const id = params.userId;
 
@@ -51,6 +55,7 @@ const CalendarDetailModal = () => {
     }
 
     const data = {
+      id,
       userId,
       date,
       transportation,
@@ -61,7 +66,24 @@ const CalendarDetailModal = () => {
       shopping,
     };
 
+    try {
+      const newExpense = await createExpense(data);
+
+      // 여기서 newExpense를 활용하여 상태를 업데이트하면 됨
+      console.log("새로 생성된 비용 데이터", newExpense);
+
+      // 예시: useCalendarWithExpenseStore에서 setData로 상태 업데이트
+      if (newExpense && newExpense !== undefined) {
+        setStoreData(newExpense);
+      }
+
+      modal.onClose();
+    } catch (error) {
+      console.error("오류 발생", error);
+    }
+
     await createExpense(data);
+    modal.onClose();
   };
 
   return (

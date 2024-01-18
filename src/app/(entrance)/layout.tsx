@@ -18,8 +18,6 @@ export const metadata: Metadata = {
 };
 
 const EntranceLayout = async ({ children }: PropsWithChildren) => {
-  // const currentUser = getCurrentUser();
-  // console.log(currentUser);
   const session = await auth();
 
   return (
@@ -27,6 +25,7 @@ const EntranceLayout = async ({ children }: PropsWithChildren) => {
       {session !== null ? <Navbar /> : <Header />}
 
       <main className="flex w-full h-full">{children}</main>
+
       <Footer />
     </div>
   );

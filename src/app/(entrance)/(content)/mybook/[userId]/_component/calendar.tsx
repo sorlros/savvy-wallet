@@ -1,8 +1,10 @@
 "use client";
 
+import { getCalendarByUserId } from "@/actions/get-calendar-by-userId";
 import useCalendarDetailModal from "@/hooks/use-calendar-detail-modal";
 import useCalendarWithExpenseStore from "@/hooks/use-calendar-with-expense-store";
 import { db } from "@/libs/db";
+import { Expense } from "@prisma/client";
 import { format } from "date-fns";
 import dynamic from "next/dynamic";
 import { useParams } from "next/navigation";
@@ -15,35 +17,42 @@ const Calendar = dynamic(() => import("react-calendar"), {
 const MyCalendar = () => {
   const calendarModal = useCalendarDetailModal();
   const params = useParams();
+  const userId = params.userId as string;
 
   const [date, setDate] = useState(new Date());
   const [isLoading, setIsLoading] = useState(false);
 
-  const { data: storeData, setData: setStoreData } =
-    useCalendarWithExpenseStore();
+  const { data, setData } = useCalendarWithExpenseStore();
 
   const handleDateChange = async (newDate: any) => {
     setIsLoading(true);
-    setDate(newDate);
-    const dateToString = format(date, "yyyyMMdd");
+    setDate((prevDate) => newDate);
 
-    let calendar;
+    try {
+      const dateToString = format(newDate, "yyyyMMdd");
+      const fetchedData = await getCalendarByUserId(userId, dateToString);
 
-    calendar = await db.calendar.findUnique({
-      where: {
-        id: params.userId as string,
-        date: dateToString,
-      },
-      include: {
-        expenses: true,
-      },
-    });
+      if (fetchedData && fetchedData !== null) {
+        console.log("달력 데이터", fetchedData);
+        setData(fetchedData);
+      }
 
-    if (!calendar) {
-      return;
+      if (!fetchedData) {
+        setData({
+          id: "",
+          userId: "",
+          date: dateToString,
+          transportation: 0,
+          communication: 0,
+          food: 0,
+          shopping: 0,
+          tax: 0,
+          accommodation: 0,
+        });
+      }
+    } catch (error) {
+      return console.error("오류 발생");
     }
-
-    setData(calendar?.expenses);
   };
 
   useEffect(() => {
@@ -52,11 +61,11 @@ const MyCalendar = () => {
       calendarModal.onOpen(dateToString);
       setIsLoading(false);
     }
-  }, [isLoading, date]);
+  }, [isLoading, date, calendarModal]);
 
   return (
     <div>
-      <Calendar onChange={handleDateChange} value={date} data={storeData} />
+      <Calendar onChange={handleDateChange} value={date} />
     </div>
   );
 };

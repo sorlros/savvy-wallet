@@ -9,7 +9,6 @@ import authConfig from "@/auth.config";
 
 export const createExpense = async (values: z.infer<typeof ExpenseSchema>) => {
   const validatedFields = ExpenseSchema.safeParse(values);
-  const { auth } = NextAuth(authConfig);
 
   if (!validatedFields.success) {
     return { error: "유효하지 않은 요청입니다." };
@@ -27,9 +26,8 @@ export const createExpense = async (values: z.infer<typeof ExpenseSchema>) => {
   } = validatedFields.data;
 
   let expense;
-  let calendar;
 
-  expense = await db.expense.findMany({
+  expense = await db.expense.findUnique({
     where: {
       date: validatedFields.data.date,
     },
@@ -37,7 +35,7 @@ export const createExpense = async (values: z.infer<typeof ExpenseSchema>) => {
 
   console.log("expense", expense);
 
-  if (!expense || expense.length === 0) {
+  if (!expense) {
     try {
       expense = await db.expense.create({
         data: {
@@ -49,13 +47,6 @@ export const createExpense = async (values: z.infer<typeof ExpenseSchema>) => {
           shopping,
           tax,
           accommodation,
-        },
-      });
-
-      calendar = await db.calendar.create({
-        data: {
-          userId,
-          date,
         },
       });
     } catch (error) {

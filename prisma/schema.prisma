@@ -18,16 +18,6 @@
   hashedPassword  String?
 
   expenses         Expense[]
-  calendars        Calendar[]
-}
-
-model Calendar {
-  id          String      @id @default(auto()) @map("_id") @db.ObjectId
-  userId      String      @db.ObjectId
-  date        String      @unique
-
-  expenses    Expense[]
-  user        User        @relation(fields: [userId], references: [id])
 }
 
 model Expense {
@@ -41,6 +31,5 @@ model Expense {
   tax             Int
   accommodation   Int
 
-  calendar        Calendar    @relation(fields: [date], references: [date])
   user            User        @relation(fields: [userId], references: [id])
 }
