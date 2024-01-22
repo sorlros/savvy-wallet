@@ -8,7 +8,7 @@ export type Calendar = {
 
 // Expense 타입
 export type Expense = {
-  id: string;
+  id?: string;
   userId: string;
   date: string;
   transportation: number;
@@ -17,8 +17,6 @@ export type Expense = {
   shopping: number;
   tax: number;
   accommodation: number;
-  calendar: Calendar; // Calendar 타입
-  user: User; // User 타입
 };
 
 // User 타입
@@ -30,4 +28,13 @@ export type User = {
   hashedPassword: string | null;
   expenses: Expense[]; // Expense 배열
   calendars: Calendar[]; // Calendar 배열
+};
+
+export type chart = {
+  transportation: number;
+  communication: number;
+  food: number;
+  shopping: number;
+  tax: number;
+  accommodation: number;
 };

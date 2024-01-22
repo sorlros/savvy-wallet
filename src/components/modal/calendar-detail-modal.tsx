@@ -34,6 +34,7 @@ const CalendarDetailModal = () => {
   };
 
   const handleSubmit = async (formData: FormData) => {
+    const id = formData.get("id") as string;
     const userId = formData.get("userId") as string;
     const date = formData.get("date") as string;
     const transportation = parseNumber(formData.get("transportation"));
@@ -76,8 +77,6 @@ const CalendarDetailModal = () => {
       if (newExpense && newExpense !== undefined) {
         setStoreData(newExpense);
       }
-
-      modal.onClose();
     } catch (error) {
       console.error("오류 발생", error);
     }

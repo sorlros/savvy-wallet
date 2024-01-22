@@ -1,6 +1,6 @@
 import { z } from "zod";
 import { create } from "zustand";
-import { Expense } from "@prisma/client";
+import { Expense } from "@/libs/types";
 
 interface CalendarWithExpenseStore {
   data: Expense;
