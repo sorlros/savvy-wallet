@@ -1,7 +1,11 @@
 import useCalendarWithExpenseStore from "@/hooks/use-calendar-with-expense-store";
 import { Expense } from "@prisma/client";
-import { useEffect, useState } from "react";
+
+import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
+import { useState } from "react";
 import { Doughnut } from "react-chartjs-2";
+
+ChartJS.register(ArcElement, Tooltip, Legend);
 
 const CircleGraph = () => {
   const { data: expenseData, setData } = useCalendarWithExpenseStore();
@@ -19,13 +23,23 @@ const CircleGraph = () => {
           expenseData.transportation,
           expenseData.shopping,
         ],
-        backgroundColor: ["red", "blue", "green", "yellow", "pink", "emerald"],
+        backgroundColor: ["red", "skyblue", "green", "yellow", "pink", "grey"],
       },
     ],
   };
+
+  const options = {
+    maintainAspectRatio: false, // 필요에 따라 조절
+    responsive: true,
+    interaction: {
+      mode: "index" as const,
+      intersect: false,
+    },
+  };
+
   return (
-    <div className="flex w-full h-full justify-center items-center">
-      <Doughnut data={chartData} />
+    <div className="flex items-center">
+      <Doughnut data={chartData} options={options} />
     </div>
   );
 };

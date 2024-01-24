@@ -33,7 +33,6 @@ const MyCalendar = () => {
       const fetchedData = await getCalendarByUserId(userId, dateToString);
 
       if (fetchedData && fetchedData !== null) {
-        console.log("달력 데이터", fetchedData);
         setData(fetchedData);
       }
 

@@ -8,6 +8,7 @@ import { ExpenseSchema } from "@/schemas";
 import useCalendarWithExpenseStore from "@/hooks/use-calendar-with-expense-store";
 import { Expense } from "@prisma/client";
 import CircleGraph from "./_component/circle-graph";
+import { getMonthExpense } from "@/actions/get-month-expense";
 
 const MyPage = () => {
   const [isPending, startTransition] = useTransition();
@@ -22,7 +23,8 @@ const MyPage = () => {
     }
 
     startTransition(() => {
-      console.log("data", data);
+      getMonthExpense(data.date, params.userId as string);
+
       setUser(data);
     });
   }, [data, params.userId, startTransition]);
@@ -35,18 +37,17 @@ const MyPage = () => {
       <div className="flex w-[40%] h-[60vh] bg-white mr-7 shadow-lg rounded-md p-5">
         {user !== undefined ? (
           <div key={data.userId}>
-            <p>userId: {data.userId}</p>
             <p>date: {data.date}</p>
-            <p>주거비용: {data.accommodation}</p>
-            <p>통신비: {data.communication}</p>
-            <p>식비: {data.food}</p>
-            <p>쇼핑비: {data.shopping}</p>
-            <p>세금: {data.tax}</p>
-            <p>교통비: {data.transportation}</p>
+            <p>주거비용: ￦{data.accommodation}</p>
+            <p>통신비: ￦{data.communication}</p>
+            <p>식비: ￦{data.food}</p>
+            <p>쇼핑비: ￦{data.shopping}</p>
+            <p>세금: ￦{data.tax}</p>
+            <p>교통비: ￦{data.transportation}</p>
           </div>
         ) : null}
 
-        {/* <CircleGraph /> */}
+        <CircleGraph />
       </div>
     </div>
   );

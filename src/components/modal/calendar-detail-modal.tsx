@@ -22,8 +22,6 @@ const CalendarDetailModal = () => {
   const month = date.substring(4, 6);
   const day = date.substring(6, 8);
 
-  console.log("date", date);
-
   const parseNumber = (value: FormDataEntryValue | null): number | null => {
     if (value === null) {
       return null;
