@@ -4,6 +4,7 @@ import { Expense } from "@prisma/client";
 import { Chart as ChartJS, ArcElement, Tooltip, Legend } from "chart.js";
 import { useState } from "react";
 import { Doughnut } from "react-chartjs-2";
+import ChartDataLabels from "chartjs-plugin-datalabels";
 
 ChartJS.register(ArcElement, Tooltip, Legend);
 
@@ -12,6 +13,7 @@ const CircleGraph = () => {
   const [user, setUser] = useState<Expense | undefined>(undefined);
 
   const chartData = {
+    plugins: [ChartDataLabels],
     labels: ["통신비", "주거비용", "세금", "식비", "교통비", "쇼핑비"],
     datasets: [
       {
@@ -28,18 +30,24 @@ const CircleGraph = () => {
     ],
   };
 
-  const options = {
-    maintainAspectRatio: false, // 필요에 따라 조절
-    responsive: true,
-    interaction: {
-      mode: "index" as const,
-      intersect: false,
-    },
-  };
-
   return (
     <div className="flex items-center">
-      <Doughnut data={chartData} options={options} />
+      <Doughnut
+        data={chartData}
+        options={{
+          maintainAspectRatio: false,
+          responsive: true,
+          interaction: {
+            mode: "index" as const,
+            intersect: false,
+          },
+          plugins: {
+            legend: {
+              position: "left",
+            },
+          },
+        }}
+      />
     </div>
   );
 };

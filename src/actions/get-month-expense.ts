@@ -4,7 +4,6 @@ import { db } from "@/libs/db";
 
 export const getMonthExpense = async (date: string, userId: string) => {
   const yearMonth = date.substring(0, 6);
-
   console.log("asd", yearMonth);
 
   try {
@@ -43,7 +42,7 @@ export const getMonthExpense = async (date: string, userId: string) => {
     const totalExpenses = sumExpenses(monthlyExpenses);
 
     console.log("Total Expenses:", totalExpenses);
-    return monthlyExpenses;
+    return totalExpenses;
   } catch (error) {
     console.log(error);
   }
