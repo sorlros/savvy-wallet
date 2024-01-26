@@ -10,6 +10,7 @@ import { Expense } from "@prisma/client";
 import CircleGraph from "./_component/circle-graph";
 import { getMonthExpense } from "@/actions/get-month-expense";
 import { Button } from "@/components/ui/button";
+import { getMonthlyExpense } from "@/actions/get-monthly-expense";
 
 const MyPage = () => {
   const [isPending, startTransition] = useTransition();
@@ -32,12 +33,29 @@ const MyPage = () => {
       getMonthExpense(data.date, params.userId as string);
 
       setUser(data);
+
+      if (page === 2) {
+        getMonthlyExpense(data.date, params.userId as string);
+      }
     });
-  }, [data, params.userId, startTransition]);
+  }, [data, params.userId, startTransition, page]);
 
   const handlePage = (value: number) => {
     setPage(value);
   };
+
+  const getTotalExpense = (data: Expense) => {
+    return (
+      data.accommodation +
+      data.communication +
+      data.food +
+      data.shopping +
+      data.tax +
+      data.transportation
+    );
+  };
+
+  const totalExpense = getTotalExpense(data);
 
   return (
     <div className="flex justify-between w-full h-full items-center">
@@ -50,13 +68,13 @@ const MyPage = () => {
             onClick={() => handlePage(1)}
             className="bg-white text-rose-400"
           >
-            일일 지출
+            요일 별 지출
           </Button>
           <Button
             onClick={() => handlePage(2)}
             className="bg-white text-rose-400"
           >
-            월 지출
+            월 별 지출
           </Button>
           <Button
             onClick={() => handlePage(3)}
@@ -65,6 +83,7 @@ const MyPage = () => {
             메모
           </Button>
         </div>
+
         {user !== undefined && page === 1 ? (
           <div
             key={data.userId}
@@ -105,7 +124,14 @@ const MyPage = () => {
                 <span>교통비</span>￦{data.transportation}
               </p>
             </div>
+            <div className="flex mt-4 mr-4 justify-end">
+              총지출 : ￦{totalExpense}
+            </div>
           </div>
+        ) : user !== undefined && page === 2 ? (
+          <div></div>
+        ) : user !== undefined && page === 3 ? (
+          <div></div>
         ) : null}
       </div>
     </div>

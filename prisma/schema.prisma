@@ -18,6 +18,7 @@
   hashedPassword  String?
 
   expenses         Expense[]
+  MonthlyExpenses  MonthlyExpense[]
 }
 
 model Expense {
@@ -32,4 +33,19 @@ model Expense {
   accommodation   Int
 
   user            User        @relation(fields: [userId], references: [id])
+}
+
+model MonthlyExpense {
+  id                    String      @id @default(auto()) @map("_id") @db.ObjectId
+  userId                String      @db.ObjectId
+  yearMonth             String      @unique
+  totalTransportation   Int
+  totalCommunication    Int
+  totalFood             Int
+  totalShopping         Int
+  totalTax              Int
+  totalAccommodation    Int
+  totalExpenses         Int
+
+  user      User    @relation(fields: [userId], references: [id])
 }

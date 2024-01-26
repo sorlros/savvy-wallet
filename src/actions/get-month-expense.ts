@@ -4,7 +4,6 @@ import { db } from "@/libs/db";
 
 export const getMonthExpense = async (date: string, userId: string) => {
   const yearMonth = date.substring(0, 6);
-  console.log("asd", yearMonth);
 
   try {
     const monthlyExpenses = await db.expense.findMany({
@@ -41,9 +40,9 @@ export const getMonthExpense = async (date: string, userId: string) => {
     // monthlyExpenses 배열에서 값들을 모두 더함
     const totalExpenses = sumExpenses(monthlyExpenses);
 
-    console.log("Total Expenses:", totalExpenses);
-    return totalExpenses;
+    // console.log("Total Expenses:", totalExpenses);
+    return { totalExpenses, monthlyExpenses };
   } catch (error) {
-    console.log(error);
+    return console.log(error);
   }
 };
