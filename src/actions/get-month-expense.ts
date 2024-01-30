@@ -41,6 +41,7 @@ export const getMonthExpense = async (date: string, userId: string) => {
     const totalExpenses = sumExpenses(monthlyExpenses);
 
     // console.log("Total Expenses:", totalExpenses);
+    // console.log("monthlyExpenses", monthlyExpenses);
     return { totalExpenses, monthlyExpenses };
   } catch (error) {
     return console.log(error);

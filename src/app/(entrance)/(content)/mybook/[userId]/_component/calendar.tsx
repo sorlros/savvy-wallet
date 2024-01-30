@@ -34,6 +34,7 @@ const MyCalendar = () => {
 
       if (fetchedData && fetchedData !== null) {
         setData(fetchedData);
+        setIsLoading(false);
       }
 
       if (!fetchedData) {
@@ -48,8 +49,10 @@ const MyCalendar = () => {
           tax: 0,
           accommodation: 0,
         });
+        setIsLoading(false);
       }
     } catch (error) {
+      setIsLoading(false);
       return console.error("오류 발생");
     }
   };

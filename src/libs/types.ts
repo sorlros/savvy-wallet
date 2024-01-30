@@ -29,12 +29,3 @@ export type User = {
   expenses: Expense[]; // Expense 배열
   calendars: Calendar[]; // Calendar 배열
 };
-
-export type chart = {
-  transportation: number;
-  communication: number;
-  food: number;
-  shopping: number;
-  tax: number;
-  accommodation: number;
-};

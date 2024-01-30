@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useState, useTransition } from "react";
+import { useEffect, useMemo, useState, useTransition } from "react";
 import MyCalendar from "./_component/calendar";
 import { redirect, useParams } from "next/navigation";
 import { db } from "@/libs/db";
@@ -11,6 +11,26 @@ import CircleGraph from "./_component/circle-graph";
 import { getMonthExpense } from "@/actions/get-month-expense";
 import { Button } from "@/components/ui/button";
 import { getMonthlyExpense } from "@/actions/get-monthly-expense";
+import LineChart from "./_component/line-chart";
+
+interface ExpenseItem {
+  id: string;
+  userId: string;
+  date: string;
+  transportation: number;
+  communication: number;
+  food: number;
+  shopping: number;
+  tax: number;
+  accommodation: number;
+}
+
+interface Expenses {
+  yearMonth: string;
+  expenses: ExpenseItem[];
+  totalExpenses: any;
+  totalSumExpenses: number;
+}
 
 const MyPage = () => {
   const [isPending, startTransition] = useTransition();
@@ -19,6 +39,12 @@ const MyPage = () => {
 
   const [user, setUser] = useState<Expense | undefined>(undefined);
   const [page, setPage] = useState<number>(1);
+  const [monthsData, setMonthsData] = useState<Expenses>({
+    yearMonth: "",
+    expenses: [],
+    totalExpenses: {},
+    totalSumExpenses: 0,
+  });
 
   const year = data.date.substring(0, 4);
   const month = data.date.substring(4, 6);
@@ -33,12 +59,21 @@ const MyPage = () => {
       getMonthExpense(data.date, params.userId as string);
 
       setUser(data);
-
-      if (page === 2) {
-        getMonthlyExpense(data.date, params.userId as string);
-      }
     });
-  }, [data, params.userId, startTransition, page]);
+  }, [data, params.userId, startTransition]);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      const expenses = await getMonthlyExpense(params.userId as string);
+      console.log("월별지출", expenses);
+
+      if (expenses) {
+        setMonthsData(expenses);
+      }
+    };
+
+    fetchData();
+  }, [data, params.userId]);
 
   const handlePage = (value: number) => {
     setPage(value);
@@ -85,10 +120,7 @@ const MyPage = () => {
         </div>
 
         {user !== undefined && page === 1 ? (
-          <div
-            key={data.userId}
-            className="flex-col items-center justify-center text-center"
-          >
+          <div className="flex-col items-center justify-center text-center">
             <p className="border-b-4 mb-4">{`${year}년 ${month}월 ${day}일`}</p>
             <div className="flex justify-center items-center border-b-4">
               <CircleGraph />
@@ -129,7 +161,12 @@ const MyPage = () => {
             </div>
           </div>
         ) : user !== undefined && page === 2 ? (
-          <div></div>
+          <div className="flex-col items-center justify-center text-center">
+            <p className="border-b-4 mb-4">{`${year}년 ${month}월 ${day}일`}</p>
+            <div className="flex justify-center items-center border-b-4">
+              <LineChart chartData={monthsData} />
+            </div>
+          </div>
         ) : user !== undefined && page === 3 ? (
           <div></div>
         ) : null}
