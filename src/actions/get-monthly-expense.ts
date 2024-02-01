@@ -1,25 +1,37 @@
 "use server";
 
 import { db } from "@/libs/db";
+import { format, subMonths } from "date-fns";
 
 export const getMonthlyExpense = async (userId: string) => {
   const nowDate = new Date().getFullYear();
   const currentYear = String(nowDate);
+  // const nowMonth = dateToString.substring(4, 6);
 
-  const months = [
-    "01",
-    "02",
-    "03",
-    "04",
-    "05",
-    "06",
-    "07",
-    "08",
-    "09",
-    "10",
-    "11",
-    "12",
-  ];
+  const nowTime = new Date();
+  const currentYearMonth = format(nowTime, "yyyyMM");
+  const months = Array.from({ length: 12 }, (_, i) => {
+    const date = subMonths(nowTime, i);
+    return format(date, "yyyyMM");
+  }).filter((month) => month >= currentYearMonth.substring(0, 4) + "03");
+
+  console.log("months", months);
+  // console.log("date", dateToString, "month", nowMonth);
+
+  // const months = [
+  //   "01",
+  //   "02",
+  //   "03",
+  //   "04",
+  //   "05",
+  //   "06",
+  //   "07",
+  //   "08",
+  //   "09",
+  //   "10",
+  //   "11",
+  //   "12",
+  // ];
   const yearMonths: string[] = months.map((month) => currentYear + month);
 
   try {
@@ -78,7 +90,7 @@ export const getMonthlyExpense = async (userId: string) => {
       }),
     );
 
-    console.log("DDDDAAATE", monthlyExpenses);
+    // console.log("DDDDAAATE", monthlyExpenses);
     return monthlyExpenses;
   } catch (error) {
     console.error("월 별 지출 내역을 불러오는데 실패했습니다.");
