@@ -52,19 +52,6 @@ const MyPage = () => {
     );
   };
 
-  useEffect(() => {
-    const ddaa = async () => {
-      const expenses = await getMonthlyExpense(params.userId as string);
-      if (expenses && expenses.length > 0) {
-        expenses.forEach((expense) => {
-          console.log("totalSumExpenses", expense.totalSumExpenses);
-        });
-      }
-    };
-
-    ddaa();
-  }, []);
-
   const totalExpense = getTotalExpense(data);
 
   return (
@@ -136,8 +123,7 @@ const MyPage = () => {
             </div>
           </div>
         ) : user !== undefined && page === 2 ? (
-          <div className="flex-col items-center justify-center text-center">
-            <p className="border-b-4 mb-4">{`${year}년 ${month}월 ${day}일`}</p>
+          <div className="flex-col items-center justify-center text-center w-[100%] h-[100%]">
             <div className="flex justify-center items-center border-b-4">
               <LineChart />
             </div>

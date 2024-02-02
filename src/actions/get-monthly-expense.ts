@@ -1,42 +1,29 @@
 "use server";
 
 import { db } from "@/libs/db";
-import { format, subMonths } from "date-fns";
 
 export const getMonthlyExpense = async (userId: string) => {
-  const nowDate = new Date().getFullYear();
-  const currentYear = String(nowDate);
-  // const nowMonth = dateToString.substring(4, 6);
-
   const nowTime = new Date();
-  const currentYearMonth = format(nowTime, "yyyyMM");
-  const months = Array.from({ length: 12 }, (_, i) => {
-    const date = subMonths(nowTime, i);
-    return format(date, "yyyyMM");
-  }).filter((month) => month >= currentYearMonth.substring(0, 4) + "03");
+  const currentYear = nowTime.getFullYear();
+  const currentMonth = nowTime.getMonth() + 1; // getMonth() returns 0-indexed month
 
-  console.log("months", months);
-  // console.log("date", dateToString, "month", nowMonth);
+  let months: string[] = [];
 
-  // const months = [
-  //   "01",
-  //   "02",
-  //   "03",
-  //   "04",
-  //   "05",
-  //   "06",
-  //   "07",
-  //   "08",
-  //   "09",
-  //   "10",
-  //   "11",
-  //   "12",
-  // ];
-  const yearMonths: string[] = months.map((month) => currentYear + month);
+  if (currentYear && currentMonth) {
+    for (let i = 0; i < 12; i++) {
+      let month = currentMonth - i;
+      let year = currentYear;
+      if (month <= 0) {
+        month = 12 + month;
+        year -= 1;
+      }
+      months.push(`${year}${month.toString().padStart(2, "0")}`);
+    }
+  }
 
   try {
     const monthlyExpenses = await Promise.all(
-      yearMonths.map(async (yearMonth) => {
+      months.map(async (yearMonth) => {
         const getMonthExpense = await db.expense.findMany({
           where: {
             userId,
@@ -90,8 +77,8 @@ export const getMonthlyExpense = async (userId: string) => {
       }),
     );
 
-    // console.log("DDDDAAATE", monthlyExpenses);
-    return monthlyExpenses;
+    //console.log("DDDDAAATE", monthlyExpenses);
+    return { monthlyExpenses, months };
   } catch (error) {
     console.error("월 별 지출 내역을 불러오는데 실패했습니다.");
   }

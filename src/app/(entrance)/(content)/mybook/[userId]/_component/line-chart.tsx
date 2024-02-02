@@ -26,17 +26,21 @@ ChartJS.register(
 const LineChart = () => {
   const params = useParams();
   const [totalData, setTotalData] = useState<number[]>([]);
+  const [labels, setLabels] = useState<string[]>([]);
   const { data: stateData, setData } = useCalendarWithExpenseStore();
 
   useEffect(() => {
     const fetchData = async () => {
       const expenses = await getMonthlyExpense(params.userId as string);
 
-      if (expenses !== undefined && expenses.length > 0) {
-        console.log("expenses", expenses);
-        const totalSum = expenses.map((data) => data.totalSumExpenses);
-        console.log("totalData", totalData);
+      if (expenses !== undefined) {
+        // console.log("expenses", expenses);
+        const totalSum = expenses.monthlyExpenses
+          .map((data) => data.totalSumExpenses)
+          .reverse();
+        // console.log("totalData", totalData);
         setTotalData(totalSum);
+        setLabels(expenses.months.reverse());
       }
     };
 
@@ -51,25 +55,10 @@ const LineChart = () => {
       },
       title: {
         display: true,
-        text: "Chart.js Line Chart",
+        text: "지난 1년 지출 내역",
       },
     },
   };
-
-  const labels = [
-    "1월",
-    "2월",
-    "3월",
-    "4월",
-    "5월",
-    "6월",
-    "7월",
-    "8월",
-    "9월",
-    "10월",
-    "11월",
-    "12월",
-  ];
 
   const data = {
     labels,
