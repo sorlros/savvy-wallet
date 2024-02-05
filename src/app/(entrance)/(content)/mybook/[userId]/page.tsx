@@ -12,6 +12,7 @@ import { getMonthExpense } from "@/actions/get-month-expense";
 import { Button } from "@/components/ui/button";
 import { getMonthlyExpense } from "@/actions/get-monthly-expense";
 import LineChart from "./_component/line-chart";
+import Memo from "./_component/memo";
 
 const MyPage = () => {
   const [isPending, startTransition] = useTransition();
@@ -129,7 +130,9 @@ const MyPage = () => {
             </div>
           </div>
         ) : user !== undefined && page === 3 ? (
-          <div></div>
+          <div>
+            <Memo />
+          </div>
         ) : null}
       </div>
     </div>
