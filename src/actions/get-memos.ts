@@ -3,13 +3,14 @@
 import { db } from "@/libs/db";
 
 export const getMemos = async (userId: string) => {
-  const memoData = await db.memo.findMany({
-    where: {
-      userId,
-    },
-  });
-
-  if (!memoData) {
-    return null;
+  try {
+    const memoData = await db.memo.findMany({
+      where: {
+        userId,
+      },
+    });
+    return memoData;
+  } catch (error) {
+    return console.error("기존에 존재하는 메모가 없습니다.");
   }
 };

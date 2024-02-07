@@ -2,42 +2,28 @@
 
 import { db } from "@/libs/db";
 
-export const createMemo = async (userId: string, content: string) => {
-  if (!userId) {
-    return;
+export const createMemo = async (
+  userId: string,
+  content: string,
+  memoId: string,
+) => {
+  if (!userId || typeof userId !== "string") {
+    throw new Error("유효하지 않은 ID 값입니다.");
   }
 
+  let memo;
+
   try {
-    const data = await db.memo.findMany({
-      where: {
+    memo = await db.memo.create({
+      data: {
         userId,
-        createdAt,
+        content,
+        memoId,
+        createdAt: new Date(),
       },
     });
-
-    let memo;
-
-    if (!data) {
-      memo = await db.memo.create({
-        data: {
-          userId,
-          content,
-          createdAt: new Date(),
-        },
-      });
-    } else if (data) {
-      memo = await db.memo.update({
-        where: {
-          userId: data.userId,
-          createdAt,
-        },
-        data: {
-          content,
-          createdAt: new Date(),
-        },
-      });
-    }
+    console.log("메모가 생성되었습니다", memo)
   } catch (error) {
-    console.error("메모를 불러오는데 실패했습니다.");
+    console.error("메모를 저장하는데 실패했습니다.");
   }
 };
