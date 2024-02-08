@@ -9,6 +9,7 @@ export const getMemos = async (userId: string) => {
         userId,
       },
     });
+    console.log("server", memoData);
     return memoData;
   } catch (error) {
     return console.error("기존에 존재하는 메모가 없습니다.");
