@@ -22,7 +22,7 @@ export const createMemo = async (
         createdAt: new Date(),
       },
     });
-    console.log("메모가 생성되었습니다", memo)
+    console.log("메모가 생성되었습니다");
   } catch (error) {
     console.error("메모를 저장하는데 실패했습니다.");
   }
