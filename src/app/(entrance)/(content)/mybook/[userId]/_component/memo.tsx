@@ -9,6 +9,8 @@ import { PiPlusBold } from "react-icons/pi";
 import { FaTrash } from "react-icons/fa";
 import { nanoid } from "nanoid";
 import { toast } from "sonner";
+import { deleteMemo } from "@/actions/delete-memo";
+import { revalidatePath } from "next/cache";
 
 type MemoData = {
   id: string;
@@ -47,7 +49,20 @@ const Memo = () => {
           toast.success("메모가 업데이트되었습니다.");
         } else if (!memoId && content !== "") {
           const newMemoId = nanoid();
+
+          setData([
+            {
+              id: nanoid(),
+              userId: params.userId as string,
+              memoId: newMemoId,
+              content,
+              createdAt: new Date(),
+            },
+          ]);
+
           await createMemo(params.userId as string, content, newMemoId);
+
+          // revalidatePath(`/mybook/${params.userId}`);
           toast.success("새로운 메모가 생성되었습니다.");
         } else {
           toast.error("공백은 메모로 저장할 수 없습니다.");
@@ -75,23 +90,56 @@ const Memo = () => {
     handleBlur(index);
   };
 
-  const handleAddTextarea = async () => {
-    const newData = [...data];
+  const firstAddTextarea = async (content: string) => {
+    const newMemoId = nanoid();
     const newTextArea = {
-      id: nanoid(), // 임의의 ID 부여
+      id: nanoid(),
       userId: params.userId as string,
-      memoId: nanoid(), // 새로운 메모 ID 생성
-      content: "", // 새로운 메모의 내용은 빈 문자열로 설정
-      createdAt: new Date(), // 생성 시간 설정
+      memoId: newMemoId,
+      content,
+      createdAt: new Date(),
     };
-    newData.push(newTextArea);
-    setData(newData);
+    setData((prevData) => [...prevData, newTextArea]);
+    console.log("firstdata", data);
 
     await createMemo(
       newTextArea.userId,
       newTextArea.content,
       newTextArea.memoId,
     );
+    toast.success("메모가 생성되었습니다.");
+  };
+
+  const handleAddTextarea = async () => {
+    const newMemoId = nanoid();
+    const newTextArea = {
+      id: nanoid(), // 임의의 ID 부여
+      userId: params.userId as string,
+      memoId: newMemoId, // 새로운 메모 ID 생성
+      content: "", // 새로운 메모의 내용은 빈 문자열로 설정
+      createdAt: new Date(), // 생성 시간 설정
+    };
+    setData((prevData) => [...prevData, newTextArea]);
+
+    await createMemo(
+      newTextArea.userId,
+      newTextArea.content,
+      newTextArea.memoId,
+    );
+    toast.success("새로운 메모란이 생성되었습니다.");
+  };
+
+  const handleDelete = async (index: number, memoId: string) => {
+    try {
+      const newData = [...data];
+      newData.splice(index, 1);
+      setData(newData);
+
+      await deleteMemo(params.userId as string, memoId);
+      toast.success("메모를 삭제했습니다.");
+    } catch (error) {
+      toast.error("메모 삭제에 실패했습니다.");
+    }
   };
 
   return (
@@ -114,16 +162,17 @@ const Memo = () => {
                 name={`content-${index}`}
               />
               <div className="absolute top-0 right-0 mr-2 mt-2">
-                <FaTrash className="cursor-pointer" />
+                <FaTrash
+                  className="cursor-pointer"
+                  onClick={() => handleDelete(index, item.memoId)}
+                />
               </div>
             </div>
           ))
         ) : (
           <textarea
             onClick={() => {}}
-            onBlur={async () =>
-              await createMemo(params.userId as string, content, generateMemoId)
-            }
+            onBlur={async () => await firstAddTextarea(content)}
             name="content"
             className="w-full h-[36px] items-center rounded-lg bg-yellow-400 p-2"
             value={content}
