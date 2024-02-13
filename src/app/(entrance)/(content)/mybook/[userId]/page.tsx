@@ -64,7 +64,7 @@ const MyPage = () => {
         <div className="flex gap-6 w-full h-[40px] bg-slate-300 rounded-lg items-center justify-center mb-3 p-6">
           <Button
             onClick={() => handlePage(1)}
-            className="bg-white text-rose-400"
+            className="bg-white text-purple-600"
           >
             요일 별 지출
           </Button>
@@ -76,7 +76,7 @@ const MyPage = () => {
           </Button>
           <Button
             onClick={() => handlePage(3)}
-            className="bg-white text-rose-400"
+            className="bg-white text-yellow-400"
           >
             메모
           </Button>

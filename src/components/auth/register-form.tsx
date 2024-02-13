@@ -48,8 +48,9 @@ export const RegisterForm = () => {
       register(values).then((data) => {
         try {
           setSuccess(data.success);
+          console.log("data", data);
           toast.success("계정이 생성되었습니다.");
-          router.push(`/mybook/${data.user?.id}`);
+          // router.push(`/mybook/${data.user?.id}`);
         } catch (error) {
           setError(data.error);
           toast.error("계정 등록에 실패했습니다.");

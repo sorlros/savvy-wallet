@@ -6,6 +6,7 @@ import { ModalProvider } from "@/provider/modal-provider";
 import { QueryProvider } from "@/provider/query-provider";
 import ClientOnly from "@/components/client-only";
 import { CalendarProvider } from "./context/calendar-context";
+import { Toaster } from "sonner";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -28,6 +29,7 @@ export default function RootLayout({
   return (
     <html lang="ko">
       <CalendarProvider>
+        <Toaster />
         <ModalProvider />
         <body className={inter.className}>{children}</body>
       </CalendarProvider>

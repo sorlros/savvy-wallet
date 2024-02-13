@@ -45,5 +45,6 @@ export const register = async (values: z.infer<typeof RegisterSchema>) => {
 
   return {
     success: "계정이 생성되었습니다.",
+    user
   };
 };
