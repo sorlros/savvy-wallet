@@ -85,7 +85,7 @@ const CalendarDetailModal = () => {
 
   return (
     <Dialog open={isOpen} onOpenChange={modal.onClose}>
-      <DialogContent className="max-w-lg p-0 overflow-hidden">
+      <DialogContent className="flex flex-col max-w-lg p-0 overflow-hidden">
         <div className="aspect-video flex flex-col">
           <DialogHeader className="flex w-full justify-center items-center mt-3">
             {`${year}년 ${month}월 ${day}일`}
