@@ -15,7 +15,7 @@ export const Navbar = async () => {
               await signOut();
             }}
           >
-            <Button type="submit">Sign Out</Button>
+            <Button type="submit">로그아웃</Button>
           </form>
         </div>
       </div>

@@ -12,7 +12,7 @@ const SettingsPage = async () => {
           await signOut();
         }}
       >
-        <button type="submit">Sign out</button>
+        <button type="submit">로그아웃</button>
       </form>
     </div>
   );
